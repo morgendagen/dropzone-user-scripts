@@ -10,7 +10,7 @@
 # URL: http://antiframeworks.com
 # IconURL: http://antiframeworks.com/icondepot/ftp-128x128.png
 # OptionsNIB: ExtendedLogin
-# LoginTitle: SCP Host Details (Port is ignored)
+# LoginTitle: SCP Host Details
 
 require 'rubygems'
 require 'net/ssh'
@@ -113,7 +113,7 @@ class SCP
 
   def self.upload(localpaths, remotedir, host, port, user, pass, &block)
     alert_title = "SCP Upload Error"
-    Net::SSH.start(host, user, :password => pass) do |ssh|
+    Net::SSH.start(host, user, {:password => pass, :port => port}) do |ssh|
 	    files = []
 	    size  = 0
 	
@@ -199,7 +199,7 @@ class SCP
     host_info = self.sanitize_host_info(host_info)
     error_title = "Connection Failed"
     begin
-      Net::SSH.start(host_info[:server], host_info[:username], :password => host_info[:password]) do |ssh|
+      Net::SSH.start(host_info[:server], host_info[:username], {:password => host_info[:password], :port => host_info[:port]}) do |ssh|
       end
     rescue Timeout::Error
       $dz.error(error_title, "Connection timed out.")
