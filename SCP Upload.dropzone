@@ -13,8 +13,18 @@
 # LoginTitle: SCP Host Details
 
 require 'rubygems'
-require 'net/ssh'
-require 'net/scp'
+
+def meet_gem_deps?
+  dep = Gem::Dependency.new('net-scp', Gem::Requirement.default)
+  !Gem.source_index.search(dep).empty?
+end
+
+if !meet_gem_deps?
+  $dz.error("net-scp gem required!", "Install the required gem from a terminal:\r\n'sudo gem install net-scp'")
+  $dz.url(false)  
+else
+  require 'net/scp'
+end
 
 $host_info = {:server    => ENV['SERVER'],
               :port      => ENV['PORT'],
